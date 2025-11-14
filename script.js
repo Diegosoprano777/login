@@ -141,7 +141,7 @@ document.getElementById('limpiar').addEventListener('click', () => {
     campos.forEach(campo => {
       document.getElementById(`error-${campo}`).textContent = "";
     });
-    alert("⚠️ Datos eliminados.");
+    alert("⚠️ Datos de formulario eliminados.");
     return;
   }
 
