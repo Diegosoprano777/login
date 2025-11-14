@@ -27,6 +27,14 @@ function actualizarBarra() {
 }
 form.addEventListener('input', actualizarBarra);
 
+// ------------ LIMPIAR ERRORES AL ESCRIBIR ------------
+campos.forEach(campo => {
+  const input = document.getElementById(campo);
+  input.addEventListener('input', () => {
+    document.getElementById(`error-${campo}`).textContent = "";
+  });
+});
+
 // ------------ GUARDAR DATOS ------------
 document.getElementById('guardar').addEventListener('click', () => {
   let valido = true;
@@ -103,20 +111,24 @@ document.getElementById('verDatos').addEventListener('click', () => {
   });
 });
 
-// ------------ BORRAR TODO CON ALERT ------------
+// ------------ BORRAR TODO ------------
 document.getElementById('borrar').addEventListener('click', () => {
-  let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-
-  if (usuarios.length === 0) {
-    alert("⚠️ No hay datos que borrar.");
+  const usuarios = JSON.parse(localStorage.getItem('usuarios'));
+  if (!usuarios || usuarios.length === 0) {
+    alert('⚠️  datos  eliminados .');
     return;
   }
 
-  alert("🗑️ Todos los datos serán eliminados.");
   localStorage.removeItem('usuarios');
   barra.style.width = "0%";
-  contenedorDatos.style.display = "none";
-  contenedorDatos.innerHTML = '';
+  contenedorDatos.style.display = 'none';
+  contenedorDatos.innerHTML = "";
+
+  alert('🗑️ Todos los datos fueron borrados.');
+
+  // Refrescar botón y lista si estaba visible
+  const btnVer = document.getElementById('verDatos');
+  btnVer.textContent = "Mostrar datos";
 });
 
 // ------------ LIMPIAR FORMULARIO ------------
@@ -126,7 +138,10 @@ document.getElementById('limpiar').addEventListener('click', () => {
   });
 
   if (todoVacio) {
-    alert("⚠️ No hay nada que limpiar.");
+    campos.forEach(campo => {
+      document.getElementById(`error-${campo}`).textContent = "";
+    });
+    alert("⚠️ Datos eliminados.");
     return;
   }
 
