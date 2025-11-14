@@ -3,7 +3,10 @@ const campos = ['nombre', 'email', 'edad'];
 const barra = document.getElementById('barraProgreso');
 const contenedorDatos = document.getElementById('datosMostrados');
 
+<<<<<<< HEAD
 // ------------ VALIDAR CAMPOS ------------
+=======
+>>>>>>> 6108b4b9dafabb065959c2f0698c2ec6b2066e01
 function validarCampo(id, mensaje) {
   const campo = document.getElementById(id);
   const error = document.getElementById(`error-${id}`);
@@ -16,7 +19,10 @@ function validarCampo(id, mensaje) {
   }
 }
 
+<<<<<<< HEAD
 // ------------ BARRA DE PROGRESO ------------
+=======
+>>>>>>> 6108b4b9dafabb065959c2f0698c2ec6b2066e01
 function actualizarBarra() {
   let completados = 0;
   campos.forEach(campo => {
@@ -25,6 +31,7 @@ function actualizarBarra() {
   const porcentaje = (completados / campos.length) * 100;
   barra.style.width = `${porcentaje}%`;
 }
+<<<<<<< HEAD
 form.addEventListener('input', actualizarBarra);
 
 // ------------ GUARDAR DATOS ------------
@@ -34,6 +41,16 @@ document.getElementById('guardar').addEventListener('click', () => {
   campos.forEach(campo => {
     if (!validarCampo(campo, `El ${campo} es obligatorio.`)) valido = false;
   });
+=======
+
+form.addEventListener('input', actualizarBarra);
+
+document.getElementById('guardar').addEventListener('click', () => {
+  let valido = true;
+  if (!validarCampo('nombre', 'El nombre es obligatorio.')) valido = false;
+  if (!validarCampo('email', 'El email es obligatorio.')) valido = false;
+  if (!validarCampo('edad', 'La edad es obligatoria.')) valido = false;
+>>>>>>> 6108b4b9dafabb065959c2f0698c2ec6b2066e01
 
   if (!valido) return;
 
@@ -43,6 +60,7 @@ document.getElementById('guardar').addEventListener('click', () => {
     edad: document.getElementById('edad').value
   };
 
+<<<<<<< HEAD
   let listaUsuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
   listaUsuarios.push(datos);
   localStorage.setItem("usuarios", JSON.stringify(listaUsuarios));
@@ -133,3 +151,55 @@ document.getElementById('limpiar').addEventListener('click', () => {
   alert("🧹 Formulario limpiado.");
 });
 
+=======
+  // Guardar en localStorage
+  localStorage.setItem('usuario', JSON.stringify(datos));
+
+  // Mostrar mensaje de éxito
+  alert('✅ Datos guardados correctamente.');
+
+  // 🔹 Limpiar formulario después de guardar
+  form.reset();
+  barra.style.width = "0%";
+  contenedorDatos.style.display = 'none';
+
+  // 🔹 Borrar mensajes de error
+  campos.forEach(campo => {
+    document.getElementById(`error-${campo}`).textContent = "";
+  });
+});
+
+document.getElementById('verDatos').addEventListener('click', () => {
+  const datos = JSON.parse(localStorage.getItem('usuario'));
+  if (!datos) {
+    contenedorDatos.style.display = 'none';
+    return alert('⚠️ No hay datos guardados.');
+  }
+
+  contenedorDatos.innerHTML = `
+    <h3>👤 Datos Guardados</h3>
+    <p><strong>Nombre:</strong> ${datos.nombre}</p>
+    <p><strong>Email:</strong> ${datos.email}</p>
+    <p><strong>Edad:</strong> ${datos.edad}</p>
+  `;
+  contenedorDatos.style.display = 'block';
+});
+
+document.getElementById('borrar').addEventListener('click', () => {
+  localStorage.removeItem('usuario');
+  contenedorDatos.style.display = 'none';
+  barra.style.width = "0%";
+  alert('🗑️ Datos borrados del almacenamiento.');
+});
+
+document.getElementById('limpiar').addEventListener('click', () => {
+  barra.style.width = "0%";
+  contenedorDatos.style.display = 'none';
+  campos.forEach(campo => {
+    document.getElementById(`error-${campo}`).textContent = "";
+  });
+});
+
+
+  
+>>>>>>> 6108b4b9dafabb065959c2f0698c2ec6b2066e01
