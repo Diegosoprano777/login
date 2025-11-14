@@ -115,7 +115,7 @@ document.getElementById('verDatos').addEventListener('click', () => {
 document.getElementById('borrar').addEventListener('click', () => {
   const usuarios = JSON.parse(localStorage.getItem('usuarios'));
   if (!usuarios || usuarios.length === 0) {
-    alert('⚠️  datos  eliminados .');
+    alert('⚠️ Datos eliminados.');
     return;
   }
 
@@ -141,7 +141,7 @@ document.getElementById('limpiar').addEventListener('click', () => {
     campos.forEach(campo => {
       document.getElementById(`error-${campo}`).textContent = "";
     });
-    alert("⚠️ Datos de formulario eliminados.");
+    alert("⚠️ Formulario vacio.");
     return;
   }
 
