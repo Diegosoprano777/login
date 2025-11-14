@@ -103,12 +103,20 @@ document.getElementById('verDatos').addEventListener('click', () => {
   });
 });
 
-// ------------ BORRAR TODO ------------
+// ------------ BORRAR TODO CON ALERT ------------
 document.getElementById('borrar').addEventListener('click', () => {
+  let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+  if (usuarios.length === 0) {
+    alert("⚠️ No hay datos que borrar.");
+    return;
+  }
+
+  alert("🗑️ Todos los datos serán eliminados.");
   localStorage.removeItem('usuarios');
   barra.style.width = "0%";
-  contenedorDatos.style.display = 'none';
-  alert('🗑️ Todos los datos fueron borrados.');
+  contenedorDatos.style.display = "none";
+  contenedorDatos.innerHTML = '';
 });
 
 // ------------ LIMPIAR FORMULARIO ------------
@@ -132,4 +140,3 @@ document.getElementById('limpiar').addEventListener('click', () => {
 
   alert("🧹 Formulario limpiado.");
 });
-
