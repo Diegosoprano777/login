@@ -2,6 +2,10 @@ const form = document.getElementById('formUsuario');
 const campos = ['nombre', 'email', 'edad'];
 const barra = document.getElementById('barraProgreso');
 const contenedorDatos = document.getElementById('datosMostrados');
+const btnVer = document.getElementById('verDatos');
+const btnBorrar = document.getElementById('borrar');
+const btnLimpiar = document.getElementById('limpiar');
+const btnGuardar = document.getElementById('guardar');
 
 // ------------ VALIDAR CAMPOS ------------
 function validarCampo(id, mensaje) {
@@ -27,16 +31,8 @@ function actualizarBarra() {
 }
 form.addEventListener('input', actualizarBarra);
 
-// ------------ LIMPIAR ERRORES AL ESCRIBIR ------------
-campos.forEach(campo => {
-  const input = document.getElementById(campo);
-  input.addEventListener('input', () => {
-    document.getElementById(`error-${campo}`).textContent = "";
-  });
-});
-
 // ------------ GUARDAR DATOS ------------
-document.getElementById('guardar').addEventListener('click', () => {
+btnGuardar.addEventListener('click', () => {
   let valido = true;
 
   campos.forEach(campo => {
@@ -60,22 +56,25 @@ document.getElementById('guardar').addEventListener('click', () => {
   form.reset();
   barra.style.width = "0%";
   contenedorDatos.style.display = 'none';
+
+  campos.forEach(campo => {
+    document.getElementById(`error-${campo}`).textContent = "";
+  });
 });
 
 // ------------ MOSTRAR / OCULTAR DATOS ------------
-document.getElementById('verDatos').addEventListener('click', () => {
-  const btn = document.getElementById('verDatos');
+btnVer.addEventListener('click', () => {
   const usuarios = JSON.parse(localStorage.getItem('usuarios'));
 
   if (!usuarios || usuarios.length === 0) {
     contenedorDatos.style.display = 'none';
-    btn.textContent = "Mostrar datos";
+    btnVer.textContent = "Mostrar datos";
     return alert('⚠️ No hay usuarios guardados.');
   }
 
   if (contenedorDatos.style.display === "block") {
     contenedorDatos.style.display = "none";
-    btn.textContent = "Mostrar datos";
+    btnVer.textContent = "Mostrar datos";
     return;
   }
 
@@ -96,9 +95,8 @@ document.getElementById('verDatos').addEventListener('click', () => {
 
   contenedorDatos.innerHTML = html;
   contenedorDatos.style.display = 'block';
-  btn.textContent = "Ocultar datos";
+  btnVer.textContent = "Ocultar datos";
 
-  // --- BORRAR INDIVIDUAL ---
   document.querySelectorAll(".btn-borrar-individual").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const index = parseInt(e.target.getAttribute("data-index"));
@@ -106,33 +104,42 @@ document.getElementById('verDatos').addEventListener('click', () => {
       datos.splice(index, 1);
       localStorage.setItem("usuarios", JSON.stringify(datos));
       alert("🗑️ Usuario eliminado.");
-      document.getElementById('verDatos').click(); // refresca la lista
+      btnVer.click();
     });
   });
 });
 
-// ------------ BORRAR TODO ------------
-document.getElementById('borrar').addEventListener('click', () => {
-  const usuarios = JSON.parse(localStorage.getItem('usuarios'));
-  if (!usuarios || usuarios.length === 0) {
-    alert('⚠️ Datos eliminados.');
-    return;
+// ------------ BORRAR TODO (CORREGIDO + ALERTA) ------------
+btnBorrar.addEventListener('click', () => {
+  try {
+    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+    if (usuarios.length === 0) {
+      alert("⚠️ No hay datos para borrar.");
+      return;
+    }
+
+    localStorage.removeItem('usuarios');
+
+    contenedorDatos.innerHTML = "";
+    contenedorDatos.style.display = 'none';
+    btnVer.textContent = "Mostrar datos";
+    barra.style.width = "0%";
+
+    campos.forEach(campo => {
+      document.getElementById(`error-${campo}`).textContent = "";
+    });
+
+    // ALERTA FINAL ✔🔥
+    alert("🗑️ La lista de datos fue eliminada por completo.");
+  } catch (err) {
+    console.error(err);
+    alert("Se borro las lista de datos.");
   }
-
-  localStorage.removeItem('usuarios');
-  barra.style.width = "0%";
-  contenedorDatos.style.display = 'none';
-  contenedorDatos.innerHTML = "";
-
-  alert('🗑️ Todos los datos fueron borrados.');
-
-  // Refrescar botón y lista si estaba visible
-  const btnVer = document.getElementById('verDatos');
-  btnVer.textContent = "Mostrar datos";
 });
 
 // ------------ LIMPIAR FORMULARIO ------------
-document.getElementById('limpiar').addEventListener('click', () => {
+btnLimpiar.addEventListener('click', () => {
   let todoVacio = campos.every(campo => {
     return document.getElementById(campo).value.trim() === "";
   });
@@ -141,7 +148,7 @@ document.getElementById('limpiar').addEventListener('click', () => {
     campos.forEach(campo => {
       document.getElementById(`error-${campo}`).textContent = "";
     });
-    alert("⚠️ Formulario vacio.");
+    alert("⚠️ Formulario vacío.");
     return;
   }
 
